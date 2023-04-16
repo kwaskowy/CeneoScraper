@@ -1,9 +1,14 @@
 import requests
 from bs4 import BeautifulSoup
 import json
+
+def get_cos():
+    pass
+
+
 #product_code = input("podaj kod produktu")
 
-product_code = "128917874"
+product_code = "95733300"
 
 url = "https://www.ceneo.pl/" + product_code + "#tab=reviews"
 
