@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import json
-
+import os
 def get_element(ancestor, selector=None, attribute=None, return_list= False):
     try:
         if return_list:
@@ -27,11 +27,12 @@ selectors={
             "cons": ( "div.review-feature__title--negatives ~ div.review-feature__item", None, True),
             "pros": ( "div.review-feature__title--positives ~ div.review-feature__item", None, True), 
         }
-#product_code = input("podaj kod produktu")
-product_code = "95733300"
+product_code = input("podaj kod produktu")
+#product_code = "95733300"
 url = f"https://www.ceneo.pl/{product_code}#tab=reviews"
 opinions_all = []
 while url:
+    print(url)
     response = requests.get(url)
     if response.status_code == requests.codes.ok:
         page_dom = BeautifulSoup(response.text, "html.parser")
@@ -45,5 +46,7 @@ while url:
         url = "https://www.ceneo.pl" + get_element(page_dom, "a.pagination_next", "href")
     except TypeError:
         url= None
-
-    print(json.dumps(opinions_all, indent=4, ensure_ascii=False))
+if not os.path.exists("./opinions"):
+    os.mkdir("./opinions")
+with open(f"opinions/{product_code}.json", "w", encoding="UTF-8") as jf:
+    json.dump(opinions_all, jf, indent=4, ensure_ascii=False)
